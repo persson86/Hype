@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/previous_arrow.png",
+        "source": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/src/main/res/drawable-xxhdpi/previous_arrow.png"
+    },
+    {
+        "merged": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/next_arrow.png",
+        "source": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/src/main/res/drawable-xxhdpi/next_arrow.png"
+    }
+]

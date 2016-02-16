@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/res/merged/release/layout/normal_date_cell.xml",
+        "source": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/src/main/res/layout/normal_date_cell.xml"
+    },
+    {
+        "merged": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/res/merged/release/layout/date_grid_fragment.xml",
+        "source": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/src/main/res/layout/date_grid_fragment.xml"
+    },
+    {
+        "merged": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/res/merged/release/layout/calendar_view.xml",
+        "source": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/src/main/res/layout/calendar_view.xml"
+    },
+    {
+        "merged": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/res/merged/release/layout/weekday_textview.xml",
+        "source": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/src/main/res/layout/weekday_textview.xml"
+    }
+]

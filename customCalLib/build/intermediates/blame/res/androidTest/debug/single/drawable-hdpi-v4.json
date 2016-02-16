@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/previous_arrow.png",
+        "source": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/bundles/debug/res/drawable-hdpi-v4/previous_arrow.png"
+    },
+    {
+        "merged": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/ic_orange.png",
+        "source": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/bundles/debug/res/drawable-hdpi-v4/ic_orange.png"
+    },
+    {
+        "merged": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/next_arrow.png",
+        "source": "/Users/LFSPersson/Documents/Android Directory/AndroidProjetos/P1/customCalLib/build/intermediates/bundles/debug/res/drawable-hdpi-v4/next_arrow.png"
+    }
+]

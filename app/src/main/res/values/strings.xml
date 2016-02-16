@@ -33,8 +33,10 @@
     <string name="wait">Wait...</string>
     <!--Logout-->
     <string name="logout_dialog_title">Logout</string>
-    <string name="logout_dialog_msg">Are you sure you wanto to logout?</string>
+    <string name="logout_dialog_msg">Are you sure you want to logout?</string>
     <string name="logout_dialog_ok">OK</string>
     <string name="logout_dialog_cancel">Cancel</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_calendar">Calendar</string>
+    <string name="title_activity_booking_confirm">BookingConfirm</string>
 </resources>

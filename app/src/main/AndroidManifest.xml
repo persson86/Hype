@@ -73,6 +73,12 @@
         <activity
             android:name=".Hello"
             android:launchMode="singleTask" />
+        <activity android:name=".Booking" />
+        <activity
+            android:name=".BookingConfirm"
+            android:label="@string/title_activity_booking_confirm"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MyReservations"></activity>
     </application>
 
 </manifest>
