@@ -20,7 +20,11 @@ import java.util.Map;
 
 public class BookingConfirm extends AppCompatActivity {
 
-    private Firebase firebaseRef, firebaseBookingRef, bookingRef;
+    private Firebase firebaseRef,
+            firebaseBookingRef,
+            bookingRef,
+            indexIdRef;
+
     String date,
             hour,
             formatedDate,
@@ -134,13 +138,31 @@ public class BookingConfirm extends AppCompatActivity {
         Map<String, String> bookingMap = new HashMap<String, String>();
         bookingMap.put("hour", hour);
         bookingMap.put("userId", userID);
+        bookingMap.put("date", date);
         newBookingRef.setValue(bookingMap);
 
-        String postId = newBookingRef.getKey();
-        if (postId != null) {
+        String postBokking = newBookingRef.getKey();
+        if (postBokking != null) {
             Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "We have a problem, please check your reservation", Toast.LENGTH_SHORT).show();
+        }
+
+        String url_indexId = "https://perssomobappfirebase.firebaseio.com/indexId/";
+        url_indexId = url_indexId.concat(userID);
+        indexIdRef = new Firebase(url_indexId);
+        Firebase newIndexIdRef = indexIdRef.push();
+        Map<String, String> indexIdMap = new HashMap<String, String>();
+        indexIdMap.put("hour", hour);
+        indexIdMap.put("date", date);
+        indexIdMap.put("node", postBokking);
+        newIndexIdRef.setValue(indexIdMap);
+
+        String postId = newIndexIdRef.getKey();
+        if (postId != null) {
+            Log.i("LF", postId);
+        } else {
+            Log.i("LF", "null");
         }
 
     }
