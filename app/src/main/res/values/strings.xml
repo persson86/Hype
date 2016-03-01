@@ -39,4 +39,6 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_calendar">Calendar</string>
     <string name="title_activity_booking_confirm">BookingConfirm</string>
+    <!--Delete reservation-->
+    <string name="reservation_dialog_msg">Are you sure you want to remove this reservation?</string>
 </resources>

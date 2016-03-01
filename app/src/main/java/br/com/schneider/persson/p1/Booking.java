@@ -59,6 +59,7 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
             hour;
 
     Boolean noData;
+    int count = 1;
 
     private CustomCalFragment customCalFragment;
 
@@ -230,6 +231,7 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
             public void onSelectDate(Date date, View view) {
                 selectedDate = formatter.format(date);
                 formatedDate = selectedDate.replaceAll("/", "");
+                //new MyTask().execute();
                 setProgress();
 
                 if (CustomCalGridAdapter.selected != null) {
@@ -305,6 +307,68 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
 
     }
 
+    class MyTask extends AsyncTask<Integer, Integer, String> {
+        @Override
+        protected String doInBackground(Integer... params) {
+
+            noData = false;
+
+            try {
+                Thread.sleep(500);
+                publishProgress(count);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            String url_booking = "https://perssomobappfirebase.firebaseio.com/booking/";
+            url_booking = url_booking.concat(formatedDate);
+            bookingRef = new Firebase(url_booking);
+
+            bookingRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.getValue() == null) {
+                        noData = true;
+                        createHourList(noData);
+                    }
+                    for (DataSnapshot eventSnapshot : snapshot.getChildren()) {
+                        BookingEvent bookingEvent = eventSnapshot.getValue(BookingEvent.class);
+
+                        String eventHour = bookingEvent.getHour();
+
+                        for (int i = 0; i < listHours.size(); i++) {
+                            if (listHours.get(i).equals(eventHour)) {
+                                listHours.remove(i);
+                            }
+                        }
+
+                        createHourList(noData);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    Log.i("LF", firebaseError.getMessage());
+                }
+            });
+
+            return "Task Completed.";
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            progressBar.setVisibility(View.GONE);
+        }
+        @Override
+        protected void onPreExecute() {
+
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            progressBar.setProgress(values[0]);
+        }
+    }
 
 }
 

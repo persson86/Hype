@@ -143,7 +143,8 @@ public class BookingConfirm extends AppCompatActivity {
 
         String postBokking = newBookingRef.getKey();
         if (postBokking != null) {
-            Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Success!", Toast.LENGTH_LONG).show();
+            finish();
         } else {
             Toast.makeText(this, "We have a problem, please check your reservation", Toast.LENGTH_SHORT).show();
         }

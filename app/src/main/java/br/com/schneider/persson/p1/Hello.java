@@ -106,7 +106,7 @@ public class Hello extends FragmentActivity {
     }
 
     public void onClick_Reservations(View view) {
-        it = new Intent(this, MyReservations.class);
+        it = new Intent(this, Reservations.class);
         startActivity(it);
     }
 

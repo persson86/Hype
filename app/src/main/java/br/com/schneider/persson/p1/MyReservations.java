@@ -1,11 +1,17 @@
 package br.com.schneider.persson.p1;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -16,7 +22,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MyReservations extends AppCompatActivity {
+public class MyReservations extends Activity {
 
     private Firebase firebaseRef, bookingRef, idRef;
     ArrayList<String> list = new ArrayList<String>();
@@ -24,11 +30,14 @@ public class MyReservations extends AppCompatActivity {
 
     String dateLine, hourLine, userId, node;
     String url_indexId;
+    Integer count = 1;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_reservations);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         setConfigScreen();
         setConfigFirebase();
@@ -46,7 +55,15 @@ public class MyReservations extends AppCompatActivity {
 
     public void setProgress() {
 
-        new Thread(new Runnable() {
+        Log.i("LF", "pre progress");
+        progressBar.setVisibility(View.VISIBLE);
+        count = 1;
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setProgress(0);
+
+        new MyTask().execute(10);
+
+        /*new Thread(new Runnable() {
             @Override
             public void run() {
                 String userID = firebaseRef.getAuth().getUid();
@@ -99,25 +116,20 @@ public class MyReservations extends AppCompatActivity {
 
             }
         }).start();
-
+*/
     }
 
     public void deleteHourBD(final String eventLine) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 //logica
                 String[] parts = eventLine.split(" at ");
                 dateLine = parts[0];
                 hourLine = parts[1];
                 userId = parts[2];
-
-                Log.i("LF", dateLine);
-                Log.i("LF", hourLine);
-
-                //dateLine = "20160219";
-                //hourLine = "10:00";
-
 
                 //select base indexId
                 final Firebase indexIdRef;
@@ -143,11 +155,10 @@ public class MyReservations extends AppCompatActivity {
                                         deleteBDBooking(node);
                                         final Firebase indexDeleteRef;
                                         String indexDelete = url_indexId;
-                                        indexDelete = indexDelete.concat("/" +eventSnapshot.getKey().toString());
+                                        indexDelete = indexDelete.concat("/" + eventSnapshot.getKey().toString());
                                         indexDeleteRef = new Firebase(indexDelete);
                                         indexDeleteRef.removeValue();
 
-                                        //progress.dismiss();
                                     }
                                 });
                             }
@@ -176,6 +187,79 @@ public class MyReservations extends AppCompatActivity {
         bookingRef = new Firebase(url_booking);
         bookingRef.removeValue();
 
+    }
+
+    class MyTask extends AsyncTask<Integer, Integer, String> {
+        @Override
+        protected String doInBackground(Integer... params) {
+
+            String userID = firebaseRef.getAuth().getUid();
+
+            final Firebase indexIdRef;
+            String url_indexId = "https://perssomobappfirebase.firebaseio.com/indexId/";
+            url_indexId = url_indexId.concat(userID);
+            indexIdRef = new Firebase(url_indexId);
+
+            indexIdRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.getValue() == null) {
+                        return;
+                    }
+                    for (DataSnapshot idSnapshot : snapshot.getChildren()) {
+                        IndexId indexId = idSnapshot.getValue(IndexId.class);
+
+                        String eventHour = indexId.getHour();
+                        String eventDate = indexId.getDate();
+
+                        list.add(eventDate + " at " + eventHour);
+                        listDateHour.add(eventDate + ":" + eventHour);
+
+                        //instantiate custom adapter
+                        MyCustomAdapterReservations adapter = new MyCustomAdapterReservations(list, getApplicationContext());
+
+                        //handle listview and assign adapter
+                        ListView lView = (ListView) findViewById(R.id.listViewReservations);
+                        lView.setAdapter(adapter);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    Log.i("LF", firebaseError.getMessage());
+                }
+            });
+
+/*
+            for (; count <= params[0]; count++) {
+                try {
+                    Thread.sleep(500);
+                    publishProgress(count);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }*/
+            return "Task Completed.";
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            progressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //txt.setText("Task Starting...");
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            //txt.setText("Running..."+ values[0]);
+            progressBar.setProgress(values[0]);
+        }
     }
 
 }

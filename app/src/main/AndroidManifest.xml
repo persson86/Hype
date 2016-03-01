@@ -78,7 +78,9 @@
             android:name=".BookingConfirm"
             android:label="@string/title_activity_booking_confirm"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MyReservations"></activity>
+        <activity android:name=".MyReservations" />
+        <activity android:name=".Reservations" />
+        <activity android:name=".ReservationDetail"></activity>
     </application>
 
 </manifest>
