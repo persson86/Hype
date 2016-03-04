@@ -1,5 +1,6 @@
 package br.com.schneider.persson.p1;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +20,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BookingConfirm extends AppCompatActivity {
+public class BookingConfirm extends Activity {
 
     private Firebase firebaseRef,
             firebaseBookingRef,
@@ -36,6 +38,7 @@ public class BookingConfirm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking_confirm);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setConfigFirebase();
         getDateHour();
     }
@@ -91,7 +94,7 @@ public class BookingConfirm extends AppCompatActivity {
 
                             if (eventHour == hour){
                                 okRecord = false;
-                                Log.i("LF",   "Your not allowed to book at this hour " + okRecord );
+                                Log.i("LF",   "You're not allowed to book at this hour " + okRecord );
                                 //Toast.makeText(getApplicationContext(), "Your not allowed to book at this hour", Toast.LENGTH_SHORT).show();
                             }
 
@@ -131,8 +134,6 @@ public class BookingConfirm extends AppCompatActivity {
         url_booking = url_booking.concat(formatedDate);
         bookingRef = new Firebase(url_booking);
 
-        Log.i("LF", userID);
-
         Firebase newBookingRef = bookingRef.push();
 
         Map<String, String> bookingMap = new HashMap<String, String>();
@@ -161,9 +162,7 @@ public class BookingConfirm extends AppCompatActivity {
 
         String postId = newIndexIdRef.getKey();
         if (postId != null) {
-            Log.i("LF", postId);
         } else {
-            Log.i("LF", "null");
         }
 
     }

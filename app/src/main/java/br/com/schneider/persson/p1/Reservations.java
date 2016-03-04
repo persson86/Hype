@@ -29,7 +29,6 @@ public class Reservations extends Activity {
 
     private ProgressBar progressBar;
     final ArrayList<String> list = new ArrayList<String>();
-    final ArrayList<String> listBKP = new ArrayList<String>();
     int pos;
 
     @Override
@@ -113,6 +112,10 @@ public class Reservations extends Activity {
                     progressBar.setVisibility(View.GONE);
                     TextView textView = (TextView) findViewById(R.id.tVMsg);
                     textView.setVisibility(View.VISIBLE);
+                    list.clear();
+                    final ListView listView = (ListView) findViewById(R.id.reservationsList);
+                    listView.setVisibility(View.INVISIBLE);
+
                     return;
                 }
 
@@ -148,7 +151,6 @@ public class Reservations extends Activity {
 
         final ListView listView = (ListView) findViewById(R.id.reservationsList);
         listView.setAdapter(itemsAdapter);
-        //listView.setOnItemClickListener(this);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -166,22 +168,7 @@ public class Reservations extends Activity {
                 bundle.putString("Position", String.valueOf(position));
                 pos = position;
 
-                listBKP.clear();
-                for (int i = 0; i < list.size(); i++) {
-                    String lineList = String.valueOf(list.indexOf(i));
-                    Log.i("LF", "lineList" + lineList);
-                    listBKP.add(lineList);
-                    Log.i("LF", listBKP.toString());
-                }
-
                 list.clear();
-
-                Log.i("LF", "list " + list.toString());
-                Log.i("LF", "BKP " + listBKP.toString());
-                if (listBKP.isEmpty()) {
-                    ListView listView = (ListView) findViewById(R.id.reservationsList);
-                    listView.setVisibility(View.INVISIBLE);
-                }
 
                 it = new Intent(getApplicationContext(), ReservationDetail.class);
                 it.putExtras(bundle);

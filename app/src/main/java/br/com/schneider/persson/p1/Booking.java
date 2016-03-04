@@ -49,8 +49,8 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
 
     private Firebase firebaseRef, bookingRef;
 
-    ProgressDialog progress;
     ProgressBar progressBar;
+    ProgressDialog progress;
 
     ArrayList<String> listHours = new ArrayList<String>();
 
@@ -59,15 +59,21 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
             hour;
 
     Boolean noData;
-    int count = 1;
 
     private CustomCalFragment customCalFragment;
+
+    ListView listView;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadAsyncTask();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-
 
         final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
         customCalFragment = new CustomCalFragment();
@@ -97,35 +103,6 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
 
         setListenerCalendar();
 
-        /*// Setup listener
-        final CustomCalListener listener = new CustomCalListener() {
-
-            @Override
-            public void onSelectDate(Date date, View view) {
-                selectedDate = formatter.format(date);
-                loadProgressBar();
-                //checkBookingFirebase(selectedDate);
-                //Toast.makeText(getApplicationContext(), date.toString(), Toast.LENGTH_SHORT).show();
-                //Toast.makeText(getApplicationContext(), formatter.format(date), Toast.LENGTH_SHORT).show();
-                if (CustomCalGridAdapter.selected != null) {
-                    CustomCalGridAdapter.selected.findViewById(R.id.calendar_iv).setVisibility(View.INVISIBLE);
-                }
-                view.findViewById(R.id.calendar_iv).setVisibility(View.VISIBLE);
-                CustomCalGridAdapter.setSelectedDate(date);
-                CustomCalGridAdapter.setSelectedView(view);
-
-            }
-
-            @Override
-            public void onCustomCalViewCreated() {
-                //Toast.makeText(getApplicationContext(), "View is ready !", Toast.LENGTH_SHORT).show();
-
-            }
-
-        };
-
-        customCalFragment.setCustomCalListener(listener);*/
-
         listHours.add("9:00");
         listHours.add("10:00");
         listHours.add("11:00");
@@ -139,14 +116,12 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
 
         noData = false;
 
-        //createHourList(noData);
-
         //Save in memory selected day in calendar when is initialized - LF
         Date dateNow = new Date();
         selectedDate = formatter.format(dateNow);
         formatedDate = selectedDate.replaceAll("/", "");
         setConfigFirebase();
-        setProgress();
+        loadAsyncTask();
     }
 
     private void setCustomResourceForDates() {
@@ -184,7 +159,7 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
 
     public void createHourList(Boolean noData) {
 
-        if (noData == true){
+        if (noData == true) {
             listHours.clear();
             listHours.add("9:00");
             listHours.add("10:00");
@@ -202,6 +177,7 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listHours);
 
         ListView listView = (ListView) findViewById(R.id.listView1);
+        listView.setVisibility(View.VISIBLE);
         listView.setAdapter(itemsAdapter);
         listView.setOnItemClickListener(this);
 
@@ -221,8 +197,10 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
         startActivity(it);
     }
 
-    public  void setListenerCalendar(){
+    public void setListenerCalendar() {
         final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+
+        listHours.clear();
 
         // Setup listener
         final CustomCalListener listener = new CustomCalListener() {
@@ -231,8 +209,7 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
             public void onSelectDate(Date date, View view) {
                 selectedDate = formatter.format(date);
                 formatedDate = selectedDate.replaceAll("/", "");
-                //new MyTask().execute();
-                setProgress();
+                loadAsyncTask();
 
                 if (CustomCalGridAdapter.selected != null) {
                     CustomCalGridAdapter.selected.findViewById(R.id.calendar_iv).setVisibility(View.INVISIBLE);
@@ -253,7 +230,84 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
         customCalFragment.setCustomCalListener(listener);
     }
 
-    public void setProgress(){
+    public void loadAsyncTask() {
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        listView = (ListView) findViewById(R.id.listView1);
+
+        //progressBar.setVisibility(View.VISIBLE);
+
+        new AsyncTask<String, Integer, Integer>() {
+            @Override
+            protected Integer doInBackground(String... params) {
+
+                /*try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+
+                checkReservations();
+
+                return 1;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                listView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+            }
+
+            @Override
+            protected void onPostExecute(Integer integer) {
+                progressBar.setVisibility(View.GONE);
+                createHourList(noData);
+            }
+
+        }.execute();
+    }
+
+    public void checkReservations() {
+
+        noData = false;
+
+        String url_booking = "https://perssomobappfirebase.firebaseio.com/booking/";
+        url_booking = url_booking.concat(formatedDate);
+        bookingRef = new Firebase(url_booking);
+
+        bookingRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.getValue() == null) {
+                    noData = true;
+                    createHourList(noData);
+                }
+                for (DataSnapshot eventSnapshot : snapshot.getChildren()) {
+                    BookingEvent bookingEvent = eventSnapshot.getValue(BookingEvent.class);
+
+                    String eventHour = bookingEvent.getHour();
+
+                    for (int i = 0; i < listHours.size(); i++) {
+                        if (listHours.get(i).equals(eventHour)) {
+                            listHours.remove(i);
+                        }
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    /*public void setProgress() {
 
         noData = false;
 
@@ -305,71 +359,7 @@ public class Booking extends FragmentActivity implements AdapterView.OnItemClick
             }
         }).start();
 
-    }
-
-    class MyTask extends AsyncTask<Integer, Integer, String> {
-        @Override
-        protected String doInBackground(Integer... params) {
-
-            noData = false;
-
-            try {
-                Thread.sleep(500);
-                publishProgress(count);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            String url_booking = "https://perssomobappfirebase.firebaseio.com/booking/";
-            url_booking = url_booking.concat(formatedDate);
-            bookingRef = new Firebase(url_booking);
-
-            bookingRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.getValue() == null) {
-                        noData = true;
-                        createHourList(noData);
-                    }
-                    for (DataSnapshot eventSnapshot : snapshot.getChildren()) {
-                        BookingEvent bookingEvent = eventSnapshot.getValue(BookingEvent.class);
-
-                        String eventHour = bookingEvent.getHour();
-
-                        for (int i = 0; i < listHours.size(); i++) {
-                            if (listHours.get(i).equals(eventHour)) {
-                                listHours.remove(i);
-                            }
-                        }
-
-                        createHourList(noData);
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    Log.i("LF", firebaseError.getMessage());
-                }
-            });
-
-            return "Task Completed.";
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            progressBar.setVisibility(View.GONE);
-        }
-        @Override
-        protected void onPreExecute() {
-
-        }
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            progressBar.setProgress(values[0]);
-        }
-    }
-
+    }*/
 }
 
 
