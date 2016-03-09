@@ -14,34 +14,43 @@
         android:id="@+id/hello"
         android:text="@string/hello_world"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="10pt"
+        android:layout_marginBottom="40dp"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Logout!"
         android:id="@+id/btnLogout"
         android:onClick="onClick_Logout"
         android:layout_below="@+id/hello"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="#000000"
+        android:textColor="#FB8C00"
+        android:layout_marginBottom="10dp"/>
 
     <Button
         android:id="@+id/calendar"
         android:layout_below="@id/btnLogout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Calendar"
         android:onClick="onClick_Calendar"
-        />
+        android:background="#000000"
+        android:textColor="#FB8C00"
+        android:layout_marginBottom="10dp"/>
 
     <Button
         android:id="@+id/reservations"
         android:layout_below="@id/calendar"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="My Reservations"
         android:onClick="onClick_Reservations"
+        android:background="#000000"
+        android:textColor="#FB8C00"
         />
 
 </RelativeLayout>
